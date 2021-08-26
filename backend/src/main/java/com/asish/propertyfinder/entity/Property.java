@@ -7,6 +7,8 @@ import javax.persistence.*;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 @Entity
 @Getter
 @Setter
@@ -17,26 +19,24 @@ import java.time.LocalDateTime;
 public class Property {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "property_id")
-    private Long id;
+    @GeneratedValue(strategy = IDENTITY)
+    private Long propertyId;
 
     @Embedded
     private Address address;
 
-    @Column(name = "description", columnDefinition = "TEXT")
-    private String description;
-
     private BigInteger price;
+    private Integer totalArea;
+    private Integer bathroom;
     private Integer bedroom;
 
     @Column(name = "garage", columnDefinition = "integer default 0")
     private Integer garage;
 
-    private Integer bathroom;
-    private Integer totalArea;
+    @Column(name = "description", columnDefinition = "TEXT")
+    private String description;
 
-    @Column(name = "is_published", columnDefinition = "boolean default true")
+    @Column(name = "is_published", columnDefinition = "integer default true")
     private boolean isPublished;
 
     private String mainImage;
@@ -54,4 +54,5 @@ public class Property {
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private LocalDateTime publishedDate;
+
 }

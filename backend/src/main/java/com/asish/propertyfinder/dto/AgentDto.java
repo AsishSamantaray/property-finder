@@ -4,10 +4,8 @@ import lombok.*;
 
 import java.util.Set;
 
-@Getter
-@Setter
+@Data
 @Builder
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class AgentDto {

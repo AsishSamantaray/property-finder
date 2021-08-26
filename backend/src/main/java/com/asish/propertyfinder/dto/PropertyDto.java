@@ -4,14 +4,13 @@ import lombok.*;
 
 import java.math.BigInteger;
 
-@Getter
-@Setter
+@Data
 @Builder
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class PropertyDto {
 
+    private Long propertyId;
     private String fullAddress;
     private String city;
     private String state;

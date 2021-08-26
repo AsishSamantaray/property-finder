@@ -2,10 +2,8 @@ package com.asish.propertyfinder.dto;
 
 import lombok.*;
 
-@Getter
-@Setter
+@Data
 @Builder
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class ContactDto {
