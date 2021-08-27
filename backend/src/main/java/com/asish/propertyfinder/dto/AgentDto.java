@@ -10,6 +10,7 @@ import java.util.Set;
 @AllArgsConstructor
 public class AgentDto {
 
+    private Long agentId;
     private String name;
     private String image;
     private String description;

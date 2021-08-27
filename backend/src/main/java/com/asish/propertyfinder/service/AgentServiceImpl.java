@@ -2,18 +2,22 @@ package com.asish.propertyfinder.service;
 
 import com.asish.propertyfinder.dto.AgentDto;
 import com.asish.propertyfinder.entity.Agent;
+import com.asish.propertyfinder.exception.BusinessException;
 import com.asish.propertyfinder.repository.AgentRepository;
 import com.asish.propertyfinder.repository.PropertyRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class AgentServiceImpl implements AgentService {
+
+    public static final String AGENT_NOT_FOUND = "Agent not found with id {0}";
 
     private final ModelMapper modelMapper;
     private final AgentRepository agentRepository;
@@ -34,12 +38,14 @@ public class AgentServiceImpl implements AgentService {
 
     @Override
     public AgentDto getAgentById(Long agentId) {
-        return agentEntityToAgentDto(agentRepository.findById(agentId).orElseThrow());
+        return agentEntityToAgentDto(agentRepository.findById(agentId)
+                .orElseThrow(() -> new BusinessException(MessageFormat.format(AGENT_NOT_FOUND, agentId))));
     }
 
     @Override
     public void updateAgent(Long agentId, AgentDto agentDto) {
-        Agent agentById = agentRepository.findById(agentId).orElseThrow();
+        Agent agentById = agentRepository.findById(agentId)
+                .orElseThrow(() -> new BusinessException(MessageFormat.format(AGENT_NOT_FOUND, agentId)));
         Agent agent = agentDtoToAgentEntity(agentDto);
         agent.setAgentId(agentById.getAgentId());
         agentRepository.save(agent);
@@ -47,7 +53,8 @@ public class AgentServiceImpl implements AgentService {
 
     @Override
     public void deleteAgent(Long agentId) {
-        Agent agent = agentRepository.findById(agentId).orElseThrow();
+        Agent agent = agentRepository.findById(agentId)
+                .orElseThrow(() -> new BusinessException(MessageFormat.format(AGENT_NOT_FOUND, agentId)));
         agentRepository.delete(agent);
     }
 
