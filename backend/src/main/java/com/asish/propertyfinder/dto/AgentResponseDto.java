@@ -3,19 +3,20 @@ package com.asish.propertyfinder.dto;
 import lombok.*;
 
 import java.util.Set;
+import java.util.UUID;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AgentDto {
+public class AgentResponseDto {
 
-    private Long agentId;
+    private UUID agentId;
     private String name;
     private String image;
     private String description;
     private String email;
     private String mobileNumber;
     private boolean isMvp;
-    private Set<Long> propertyIds;
+    private Set<PropertyRequestDto> properties;
 }

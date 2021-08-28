@@ -1,18 +1,20 @@
 package com.asish.propertyfinder.service;
 
-import com.asish.propertyfinder.dto.AgentDto;
+import com.asish.propertyfinder.dto.AgentRequestDto;
+import com.asish.propertyfinder.dto.AgentResponseDto;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface AgentService {
 
-    void createAgent(AgentDto agentDto);
+    void createAgent(AgentRequestDto agentRequestDto);
 
-    List<AgentDto> getAllProperties();
+    List<AgentResponseDto> getAllAgents();
 
-    AgentDto getAgentById(Long agentId);
+    AgentResponseDto getAgentById(UUID agentId);
 
-    void updateAgent(Long agentId, AgentDto agentDto);
+    void updateAgent(UUID agentId, AgentRequestDto agentRequestDto);
 
-    void deleteAgent(Long agentId);
+    void deleteAgent(UUID agentId);
 }

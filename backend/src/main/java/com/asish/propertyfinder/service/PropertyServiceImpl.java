@@ -1,6 +1,7 @@
 package com.asish.propertyfinder.service;
 
-import com.asish.propertyfinder.dto.PropertyDto;
+import com.asish.propertyfinder.dto.PropertyRequestDto;
+import com.asish.propertyfinder.dto.PropertyResponseDto;
 import com.asish.propertyfinder.entity.Property;
 import com.asish.propertyfinder.exception.BusinessException;
 import com.asish.propertyfinder.repository.AgentRepository;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,47 +27,48 @@ public class PropertyServiceImpl implements PropertyService {
     private final PropertyRepository propertyRepository;
 
     @Override
-    public void createProperty(PropertyDto propertyDto) {
+    public void createProperty(PropertyRequestDto propertyRequestDto) {
 //        Optional.ofNullable(propertyDto).orElseThrow()
-        Property property = propertyDtoToPropertyEntity(propertyDto);
-        property.setAgent(agentRepository.findById(propertyDto.getAgentId())
-                .orElseThrow(() -> new BusinessException(MessageFormat.format(AGENT_NOT_FOUND, propertyDto.getAgentId()))));
+        Property property = propertyRequestDtoToPropertyEntity(propertyRequestDto);
+        property.setAgent(agentRepository.findById(propertyRequestDto.getAgentId())
+                .orElseThrow(() -> new BusinessException(MessageFormat.format(AGENT_NOT_FOUND, propertyRequestDto.getAgentId()))));
         propertyRepository.save(property);
     }
 
     @Override
-    public List<PropertyDto> getAllProperties() {
+    public List<PropertyResponseDto> getAllProperties() {
         return propertyRepository.findAll().stream()
-                .map(this::propertyEntityToPropertyDto).collect(Collectors.toList());
+                .map(this::propertyEntityToPropertyResponseDto).collect(Collectors.toList());
     }
 
     @Override
-    public PropertyDto getPropertyById(Long propertyId) {
-        return propertyEntityToPropertyDto(propertyRepository.findById(propertyId)
+    public PropertyResponseDto getPropertyById(UUID propertyId) {
+        return propertyEntityToPropertyResponseDto(propertyRepository.findById(propertyId)
                 .orElseThrow(() -> new BusinessException(MessageFormat.format(PROPERTY_NOT_FOUND, propertyId))));
     }
 
     @Override
-    public void updateProperty(Long propertyId, PropertyDto propertyDto) {
+    public void updateProperty(UUID propertyId, PropertyRequestDto propertyRequestDto) {
         Property propertyById = propertyRepository.findById(propertyId)
                 .orElseThrow(() -> new BusinessException(MessageFormat.format(PROPERTY_NOT_FOUND, propertyId)));
-        Property property = propertyDtoToPropertyEntity(propertyDto);
+        Property property = propertyRequestDtoToPropertyEntity(propertyRequestDto);
         property.setPropertyId(propertyById.getPropertyId());
         propertyRepository.save(property);
     }
 
     @Override
-    public void deleteProperty(Long propertyId) {
+    public void deleteProperty(UUID propertyId) {
         Property property = propertyRepository.findById(propertyId)
                 .orElseThrow(() -> new BusinessException(MessageFormat.format(PROPERTY_NOT_FOUND, propertyId)));
         propertyRepository.delete(property);
     }
 
-    private PropertyDto propertyEntityToPropertyDto(Property property) {
-        return modelMapper.map(property, PropertyDto.class);
+    private Property propertyRequestDtoToPropertyEntity(PropertyRequestDto propertyRequestDto) {
+        return modelMapper.map(propertyRequestDto, Property.class);
     }
 
-    private Property propertyDtoToPropertyEntity(PropertyDto propertyDto) {
-        return modelMapper.map(propertyDto, Property.class);
+    private PropertyResponseDto propertyEntityToPropertyResponseDto(Property property) {
+        return modelMapper.map(property, PropertyResponseDto.class);
     }
+
 }

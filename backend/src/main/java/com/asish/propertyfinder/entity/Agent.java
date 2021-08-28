@@ -2,24 +2,27 @@ package com.asish.propertyfinder.entity;
 
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Getter
 @Setter
 @Builder
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class Agent {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long agentId;
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID agentId;
 
     private String name;
     private String image;
@@ -33,7 +36,7 @@ public class Agent {
     @Column(name = "is_mvp", columnDefinition = "boolean default false")
     private boolean isMvp;
 
-    @OneToMany(mappedBy = "agent", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "agent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Property> properties;
 
     @CreationTimestamp

@@ -2,25 +2,26 @@ package com.asish.propertyfinder.entity;
 
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
-
-import static javax.persistence.GenerationType.IDENTITY;
+import java.util.UUID;
 
 @Entity
 @Getter
 @Setter
 @Builder
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class Property {
 
     @Id
-    @GeneratedValue(strategy = IDENTITY)
-    private Long propertyId;
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "uuid2")
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID propertyId;
 
     @Embedded
     private Address address;

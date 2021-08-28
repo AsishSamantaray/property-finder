@@ -1,6 +1,7 @@
 package com.asish.propertyfinder.service;
 
-import com.asish.propertyfinder.dto.AgentDto;
+import com.asish.propertyfinder.dto.AgentRequestDto;
+import com.asish.propertyfinder.dto.AgentResponseDto;
 import com.asish.propertyfinder.entity.Agent;
 import com.asish.propertyfinder.exception.BusinessException;
 import com.asish.propertyfinder.repository.AgentRepository;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,46 +27,49 @@ public class AgentServiceImpl implements AgentService {
     private final PropertyRepository propertyRepository;
 
     @Override
-    public void createAgent(AgentDto agentDto) {
-        Agent agent = agentDtoToAgentEntity(agentDto);
-        propertyRepository.findAllById(agentDto.getPropertyIds()).forEach(agent::addProperty);
+    public void createAgent(AgentRequestDto agentRequestDto) {
+        Agent agent = agentRequestDtoToAgentEntity(agentRequestDto);
+        Set<UUID> propertyIds = agentRequestDto.getPropertyIds();
+        if (propertyIds != null && !propertyIds.isEmpty()) {
+            propertyRepository.findAllById(propertyIds).forEach(agent::addProperty);
+        }
         agentRepository.save(agent);
     }
 
     @Override
-    public List<AgentDto> getAllProperties() {
+    public List<AgentResponseDto> getAllAgents() {
         return agentRepository.findAll().stream()
-                .map(this::agentEntityToAgentDto).collect(Collectors.toList());
+                .map(this::agentEntityToAgentResponseDto).collect(Collectors.toList());
     }
 
     @Override
-    public AgentDto getAgentById(Long agentId) {
-        return agentEntityToAgentDto(agentRepository.findById(agentId)
+    public AgentResponseDto getAgentById(UUID agentId) {
+        return agentEntityToAgentResponseDto(agentRepository.findById(agentId)
                 .orElseThrow(() -> new BusinessException(MessageFormat.format(AGENT_NOT_FOUND, agentId))));
     }
 
     @Override
-    public void updateAgent(Long agentId, AgentDto agentDto) {
+    public void updateAgent(UUID agentId, AgentRequestDto agentRequestDto) {
         Agent agentById = agentRepository.findById(agentId)
                 .orElseThrow(() -> new BusinessException(MessageFormat.format(AGENT_NOT_FOUND, agentId)));
-        Agent agent = agentDtoToAgentEntity(agentDto);
+        Agent agent = agentRequestDtoToAgentEntity(agentRequestDto);
         agent.setAgentId(agentById.getAgentId());
         agentRepository.save(agent);
     }
 
     @Override
-    public void deleteAgent(Long agentId) {
+    public void deleteAgent(UUID agentId) {
         Agent agent = agentRepository.findById(agentId)
                 .orElseThrow(() -> new BusinessException(MessageFormat.format(AGENT_NOT_FOUND, agentId)));
         agentRepository.delete(agent);
     }
 
-    private AgentDto agentEntityToAgentDto(Agent agent) {
-        return modelMapper.map(agent, AgentDto.class);
+    private Agent agentRequestDtoToAgentEntity(AgentRequestDto agentRequestDto) {
+        return modelMapper.map(agentRequestDto, Agent.class);
     }
 
-    private Agent agentDtoToAgentEntity(AgentDto agentDto) {
-        return modelMapper.map(agentDto, Agent.class);
+    private AgentResponseDto agentEntityToAgentResponseDto(Agent agent) {
+        return modelMapper.map(agent, AgentResponseDto.class);
     }
 }
 
