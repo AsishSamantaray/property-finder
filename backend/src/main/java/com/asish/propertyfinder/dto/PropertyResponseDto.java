@@ -3,15 +3,15 @@ package com.asish.propertyfinder.dto;
 import lombok.*;
 
 import java.math.BigInteger;
+import java.util.UUID;
 
-@Getter
-@Setter
+@Data
 @Builder
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class PropertyDto {
+public class PropertyResponseDto {
 
+    private UUID propertyId;
     private String fullAddress;
     private String city;
     private String state;
@@ -30,5 +30,5 @@ public class PropertyDto {
     private String image4;
     private String image5;
     private String image6;
-    private Long agentId;
+    private AgentResponseDto agent;
 }
