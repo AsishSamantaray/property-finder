@@ -16,6 +16,7 @@ import java.util.UUID;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api")
 @Api("REST API for Properties.")
