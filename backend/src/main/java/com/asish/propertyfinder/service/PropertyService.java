@@ -17,4 +17,6 @@ public interface PropertyService {
     void updateProperty(UUID propertyId, PropertyRequestDto propertyRequestDto);
 
     void deleteProperty(UUID propertyId);
+
+    List<PropertyResponseDto> getTop3Properties();
 }

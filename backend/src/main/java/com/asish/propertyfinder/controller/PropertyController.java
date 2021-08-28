@@ -82,4 +82,15 @@ public class PropertyController {
         propertyService.deleteProperty(propertyId);
         return ResponseEntity.status(OK).build();
     }
+
+    @GetMapping("/latest-properties")
+    @ApiOperation(value = "API to get latest 3 properties.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 204, message = "No Content"),
+            @ApiResponse(code = 404, message = "Not Found")
+    })
+    public ResponseEntity<List<PropertyResponseDto>> getTop3Properties() {
+        return ResponseEntity.ok(propertyService.getTop3Properties());
+    }
 }

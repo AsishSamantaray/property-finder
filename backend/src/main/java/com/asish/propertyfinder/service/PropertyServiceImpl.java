@@ -63,6 +63,12 @@ public class PropertyServiceImpl implements PropertyService {
         propertyRepository.delete(property);
     }
 
+    @Override
+    public List<PropertyResponseDto> getTop3Properties() {
+        return propertyRepository.findTop3ByOrderByPublishedDateDesc().stream()
+                .map(this::propertyEntityToPropertyResponseDto).collect(Collectors.toList());
+    }
+
     private Property propertyRequestDtoToPropertyEntity(PropertyRequestDto propertyRequestDto) {
         return modelMapper.map(propertyRequestDto, Property.class);
     }
